@@ -94,6 +94,7 @@ class SocialShare {
     List<String>? hashtags,
     String? url,
     String? trailingText,
+    String? image,
   }) async {
     //Caption
     var _captionText = captionText;
@@ -119,8 +120,16 @@ class SocialShare {
       _captionText = _captionText + "\n" + trailingText;
     }
 
+    String? _imagePath = image;
+    if (Platform.isAndroid) {
+      var stickerFilename = "stickerAsset.png";
+      await reSaveImage(image, stickerFilename);
+      _imagePath = stickerFilename;
+    }
+
     Map<String, dynamic> args = <String, dynamic>{
       "captionText": _captionText + " ",
+      if (_imagePath != null) "image": _imagePath,
     };
     final String? version = await _channel.invokeMethod('shareTwitter', args);
     return version;
@@ -177,7 +186,7 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareWhatsapp(String content, String? image) async {
+  static Future<String?> shareWhatsapp(String content, {String? image}) async {
     String? _imagePath = image;
     if (Platform.isAndroid) {
       var stickerFilename = "stickerAsset.png";
@@ -189,6 +198,21 @@ class SocialShare {
       "image": _imagePath
     };
     final String? version = await _channel.invokeMethod('shareWhatsapp', args);
+    return version;
+  }
+
+  static Future<String?> shareLinkedIn(String content, {String? image}) async {
+    String? _imagePath = image;
+    if (Platform.isAndroid) {
+      var stickerFilename = "stickerAsset.png";
+      await reSaveImage(image, stickerFilename);
+      _imagePath = stickerFilename;
+    }
+    final Map<String, dynamic> args = <String, dynamic>{
+      "content": content,
+      "image": _imagePath
+    };
+    final String? version = await _channel.invokeMethod('shareLinkedIn', args);
     return version;
   }
 

@@ -185,6 +185,26 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
             }
+        } else if (call.method == "shareLinkedIn") {
+            //shares content on WhatsApp
+            val content: String? = call.argument("content")
+            val image: String? = call.argument("image")
+            val file =  File(activeContext!!.cacheDir,image)
+            val imageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
+            val linkedInIntent = Intent(Intent.ACTION_SEND)
+            linkedInIntent.setPackage("com.linkedin.android")
+            linkedInIntent.type = "text/plain"
+            linkedInIntent.putExtra(Intent.EXTRA_TEXT, content)
+            linkedInIntent.putExtra(Intent.EXTRA_STREAM, imageFile);
+            linkedInIntent.setType("image/jpeg");
+            linkedInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            try {
+                activity!!.startActivity(linkedInIntent)
+                result.success("success")
+            } catch (ex: ActivityNotFoundException) {
+                result.success("error")
+            }
         } else if (call.method == "shareSms") {
             //shares content on sms
             val content: String? = call.argument("message")
@@ -204,11 +224,18 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             val text: String? = call.argument("captionText")
             val urlScheme = "http://www.twitter.com/intent/tweet?text=${URLEncoder.encode(text, Charsets.UTF_8.name())}"
             Log.d("", urlScheme)
-
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlScheme)
+            
+            val image: String? = call.argument("image")
+            val file =  File(activeContext!!.cacheDir,image)
+            val imageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
+            val twitterIntent = Intent(Intent.ACTION_SEND)
+            twitterIntent.type = "text/plain"
+            twitterIntent.setPackage("com.twitter.android")
+            twitterIntent.putExtra(Intent.EXTRA_TEXT, text)
+            twitterIntent.putExtra(Intent.EXTRA_STREAM, imageFile);
+            twitterIntent.setType("image/jpeg");
             try {
-                activity!!.startActivity(intent)
+                activity!!.startActivity(twitterIntent)
                 result.success("success")
             } catch (ex: ActivityNotFoundException) {
                 result.success("error")
@@ -249,6 +276,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             apps["twitter"] = packages.any  { it.packageName.toString().contentEquals("com.twitter.android") }
             apps["whatsapp"] = packages.any  { it.packageName.toString().contentEquals("com.whatsapp") }
             apps["telegram"] = packages.any  { it.packageName.toString().contentEquals("org.telegram.messenger") }
+            apps["linkedIn"] = packages.any  { it.packageName.toString().contentEquals("com.linkedin.android") }
 
             result.success(apps)
         } else {
