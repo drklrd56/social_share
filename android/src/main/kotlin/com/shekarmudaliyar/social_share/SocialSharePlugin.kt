@@ -169,7 +169,7 @@ class SocialSharePlugin:FlutterPlugin, MethodCallHandler, ActivityAware {
             //shares content on WhatsApp
             val content: String? = call.argument("content")
             val image: String? = call.argument("image")
-            val file =  File(activeContext!!.cacheDir,stickerImage)
+            val file =  File(activeContext!!.cacheDir,image)
             val imageFile = FileProvider.getUriForFile(activeContext!!, activeContext!!.applicationContext.packageName + ".com.shekarmudaliyar.social_share", file)
             val whatsappIntent = Intent(Intent.ACTION_SEND)
             whatsappIntent.type = "text/plain"
