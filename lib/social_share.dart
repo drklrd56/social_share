@@ -177,8 +177,17 @@ class SocialShare {
     return version;
   }
 
-  static Future<String?> shareWhatsapp(String content) async {
-    final Map<String, dynamic> args = <String, dynamic>{"content": content};
+  static Future<String?> shareWhatsapp(String content, String? image) async {
+    String? _imagePath = image;
+    if (Platform.isAndroid) {
+      var stickerFilename = "stickerAsset.png";
+      await reSaveImage(image, stickerFilename);
+      _imagePath = stickerFilename;
+    }
+    final Map<String, dynamic> args = <String, dynamic>{
+      "content": content,
+      "image": _imagePath
+    };
     final String? version = await _channel.invokeMethod('shareWhatsapp', args);
     return version;
   }
