@@ -129,7 +129,7 @@ class SocialShare {
 
     Map<String, dynamic> args = <String, dynamic>{
       "captionText": _captionText + " ",
-      if (_imagePath != null) "image": _imagePath,
+      if (Platform.isAndroid) "image": _imagePath,
     };
     final String? version = await _channel.invokeMethod('shareTwitter', args);
     return version;
@@ -195,7 +195,7 @@ class SocialShare {
     }
     final Map<String, dynamic> args = <String, dynamic>{
       "content": content,
-      "image": _imagePath
+      if (Platform.isAndroid) "image": _imagePath
     };
     final String? version = await _channel.invokeMethod('shareWhatsapp', args);
     return version;
@@ -210,7 +210,7 @@ class SocialShare {
     }
     final Map<String, dynamic> args = <String, dynamic>{
       "content": content,
-      "image": _imagePath
+      if (Platform.isAndroid) "image": _imagePath
     };
     final String? version = await _channel.invokeMethod('shareLinkedIn', args);
     return version;
