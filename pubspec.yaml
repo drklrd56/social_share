@@ -1,6 +1,6 @@
 name: social_share
 description: Wide variety of sharing options you'll need to share directly to certain well-known apps.
-version: 2.3.2
+version: 3.0.0
 homepage: https://github.com/drklrd56/social_share
 
 environment:
